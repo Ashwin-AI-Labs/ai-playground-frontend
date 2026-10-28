@@ -1,8 +1,10 @@
+export { ResearchAgentPage } from "./pages/ResearchAgentPage";
+
 export const researchAgentFeature = {
   id: "research-agent",
-  title: "AI Research Agent",
+  title: "AI Research Assistant",
   description:
-    "Multi-step research flows that plan, gather context, and synthesize answers.",
-  tech: "Agent frameworks",
+    "Web search, source-backed reports, validated citations, and saved research sessions.",
+  tech: "Tavily + LLM + SSRF-safe fetch",
   path: "/features/research-agent",
 } as const;

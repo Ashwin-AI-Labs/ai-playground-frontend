@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ChatAssistantPage } from "../features/chat-assistant";
 import { PdfRagPage } from "../features/pdf-rag";
+import { ResearchAgentPage } from "../features/research-agent";
 import { SemanticSearchPage } from "../features/semantic-search";
 import { TaskAssistantPage } from "../features/task-assistant";
 import { DashboardPage } from "../pages/DashboardPage";
@@ -19,6 +20,7 @@ export function AppRouter() {
       <Route path="/features/task-assistant" element={<TaskAssistantPage />} />
       <Route path="/features/semantic-search" element={<SemanticSearchPage />} />
       <Route path="/features/pdf-qa" element={<PdfRagPage />} />
+      <Route path="/features/research-agent" element={<ResearchAgentPage />} />
       <Route path="/features/:featureId" element={<FeaturePlaceholderPage />} />
       <Route path="*" element={<NotFoundPage />} />
       {/* Keep dashboard reachable if someone bookmarks old wildcards */}

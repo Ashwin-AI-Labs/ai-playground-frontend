@@ -32,7 +32,7 @@ src/
     semantic-search/   # page, api, types (full Project 3 UI)
     pdf-rag/           # RAG Q&A page, api, types
     document-summarizer/
-    research-agent/
+    research-agent/    # Research Assistant page, api, types
   services/api/        # shared HTTP client (no feature business logic)
   styles/
 ```
@@ -95,6 +95,18 @@ Route: `/features/pdf-qa`
 - Page labels when PDF page metadata exists; otherwise “Page unavailable”
 - Insufficient-evidence state when retrieval/support is too weak
 
+### AI Research Assistant
+
+Route: `/features/research-agent`
+
+- Research question form with example prompts, max sources, optional recency and domain filters
+- Live web research via backend Tavily search + SSRF-safe page fetch
+- Structured report with executive summary, findings, conflicts, limitations, conclusions
+- Citation markers linked only to validated source IDs; external links use `rel="noopener noreferrer"`
+- Session history with reopen and delete confirmation
+
+Requires `TAVILY_API_KEY` on the backend for live search. Frontend never holds search or LLM keys.
+
 ### Placeholders
 
-`summarizer` and `research-agent` remain dashboard cards with placeholder pages until implemented.
+`summarizer` remains a dashboard card with a placeholder page until implemented.
