@@ -13,10 +13,10 @@ export function FeaturePlaceholderPage() {
           That playground route does not exist yet.
         </p>
         <Link
-          to="/"
-          className="mt-8 inline-flex w-fit rounded-lg border border-white/15 bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50"
+          to="/home"
+          className="mt-8 inline-flex w-fit rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50"
         >
-          Back to dashboard
+          Back to home
         </Link>
       </main>
     );
@@ -25,13 +25,13 @@ export function FeaturePlaceholderPage() {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-12 sm:px-6">
       <Link
-        to="/"
+        to="/home"
         className="w-fit text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
       >
-        ← Back to dashboard
+        ← Back to home
       </Link>
 
-      <div className="fade-in mt-10 rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-8">
+      <div className="fade-in mt-10 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-850)]/80 p-8">
         <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
           {feature.tech}
         </p>
@@ -41,7 +41,7 @@ export function FeaturePlaceholderPage() {
         <p className="mt-4 text-base leading-relaxed text-[var(--color-ink-300)]">
           {feature.description}
         </p>
-        <div className="mt-8 border-t border-white/10 pt-6">
+        <div className="mt-8 border-t border-[var(--color-border)] pt-6">
           <p className="text-sm font-medium text-[var(--color-ink-100)]">
             Coming in a later phase
           </p>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { FeatureShell } from "../../../components/layout/FeatureShell";
 import { ApiError } from "../../../services/api/client";
 import { semanticSearchApi } from "../api/semanticSearchApi";
 import type { SearchDocument, SearchResult } from "../types";
@@ -152,30 +152,14 @@ export function SemanticSearchPage() {
   };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-      <Link
-        to="/"
-        className="w-fit text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
-      >
-        ← Back to dashboard
-      </Link>
-
-      <header className="fade-in mt-6 max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
-          Embeddings &amp; vector search
-        </p>
-        <h1 className="font-display mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Semantic Document Search
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-300)] sm:text-base">
-          Upload PDF, TXT, or Markdown files. Passages are embedded and ranked by
-          meaning — not exact keywords.
-        </p>
-      </header>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+    <FeatureShell
+      title="Semantic Document Search"
+      description="Upload PDF, TXT, or Markdown files. Passages are embedded and ranked by meaning — not exact keywords."
+      wide={true}
+    >
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
         <section
-          className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5"
+          className="rounded-2xl border border-[var(--color-border)] bg-white p-5"
           aria-label="Document management"
         >
           <h2 className="font-display text-xl font-semibold">Documents</h2>
@@ -187,7 +171,7 @@ export function SemanticSearchPage() {
             className={`mt-4 rounded-xl border border-dashed px-4 py-8 text-center transition ${
               dragOver
                 ? "border-[var(--color-accent)] bg-[var(--color-accent)]/10"
-                : "border-white/15 bg-[var(--color-surface-800)]/60"
+                : "border-[var(--color-border)] bg-[var(--color-surface-800)]/60"
             }`}
             onDragOver={(event) => {
               event.preventDefault();
@@ -207,7 +191,7 @@ export function SemanticSearchPage() {
               type="button"
               disabled={uploading}
               onClick={() => fileInputRef.current?.click()}
-              className="mt-3 inline-flex rounded-lg border border-white/15 bg-[var(--color-surface-700)] px-3.5 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50 disabled:opacity-50"
+              className="mt-3 inline-flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-700)] px-3.5 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50 disabled:opacity-50"
             >
               {uploading ? "Indexing…" : "Browse files"}
             </button>
@@ -255,7 +239,7 @@ export function SemanticSearchPage() {
               documents.map((doc) => (
                 <li
                   key={doc.id}
-                  className="rounded-xl border border-white/10 bg-[var(--color-surface-800)]/70 p-3"
+                  className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-800)]/70 p-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -287,7 +271,7 @@ export function SemanticSearchPage() {
         </section>
 
         <section
-          className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5"
+          className="rounded-2xl border border-[var(--color-border)] bg-white p-5"
           aria-label="Semantic search"
         >
           <h2 className="font-display text-xl font-semibold">Search</h2>
@@ -303,7 +287,7 @@ export function SemanticSearchPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 rows={3}
                 placeholder='e.g. "What is the company&apos;s work-from-home policy?"'
-                className="w-full resize-y rounded-xl border border-white/10 bg-[var(--color-surface-800)] px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] focus:ring-1"
+                className="w-full resize-y rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-800)] px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] focus:ring-1"
               />
             </label>
 
@@ -313,7 +297,7 @@ export function SemanticSearchPage() {
                 <select
                   value={limit}
                   onChange={(event) => setLimit(Number(event.target.value))}
-                  className="rounded-lg border border-white/10 bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
+                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
                 >
                   {[3, 5, 8, 10].map((value) => (
                     <option key={value} value={value}>
@@ -325,7 +309,7 @@ export function SemanticSearchPage() {
               <button
                 type="submit"
                 disabled={searching}
-                className="inline-flex rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-black transition hover:opacity-90 disabled:opacity-50"
+                className="inline-flex rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-50"
               >
                 {searching ? "Searching…" : "Search"}
               </button>
@@ -348,7 +332,7 @@ export function SemanticSearchPage() {
                       className={`rounded-lg border px-2.5 py-1 text-xs transition ${
                         active
                           ? "border-[var(--color-accent)]/60 bg-[var(--color-accent)]/15 text-[var(--color-ink-100)]"
-                          : "border-white/10 text-[var(--color-ink-400)] hover:border-white/25"
+                          : "border-[var(--color-border)] text-[var(--color-ink-400)] hover:border-[var(--color-accent)]/40"
                       }`}
                     >
                       {doc.originalFilename}
@@ -388,7 +372,7 @@ export function SemanticSearchPage() {
               results.map((result) => (
                 <article
                   key={`${result.chunkId}-${result.rank}`}
-                  className="rounded-xl border border-white/10 bg-[var(--color-surface-800)]/80 p-4"
+                  className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-800)]/80 p-4"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-accent)]">
@@ -423,7 +407,7 @@ export function SemanticSearchPage() {
 
       {pendingDelete ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--color-surface-850)] p-5">
+          <div className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-850)] p-5">
             <h2 className="font-display text-lg font-semibold">Delete document?</h2>
             <p className="mt-2 text-sm text-[var(--color-ink-300)]">
               This permanently removes “{pendingDelete.originalFilename}” and all
@@ -434,7 +418,7 @@ export function SemanticSearchPage() {
                 type="button"
                 disabled={deleting}
                 onClick={() => setPendingDelete(null)}
-                className="rounded-lg border border-white/15 px-3 py-2 text-sm"
+                className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               >
                 Cancel
               </button>
@@ -450,6 +434,6 @@ export function SemanticSearchPage() {
           </div>
         </div>
       ) : null}
-    </main>
+    </FeatureShell>
   );
 }

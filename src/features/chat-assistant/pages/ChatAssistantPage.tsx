@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { FeatureShell } from "../../../components/layout/FeatureShell";
 import { ApiError } from "../../../services/api/client";
 import { chatApi } from "../api/chatApi";
 import type { ChatConversation, ChatMessage } from "../types";
@@ -15,10 +15,13 @@ export function ChatAssistantPage() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = useCallback(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   }, []);
 
   const loadConversations = useCallback(async () => {
@@ -124,33 +127,21 @@ export function ChatAssistantPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <Link
-            to="/"
-            className="text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
-          >
-            ← Back to dashboard
-          </Link>
-          <h1 className="font-display mt-2 text-3xl font-bold tracking-tight">
-            AI Chat Assistant
-          </h1>
-          <p className="mt-1 text-sm text-[var(--color-ink-400)]">
-            GPT-powered chat with conversation history. API keys stay on the backend.
-          </p>
-        </div>
+    <FeatureShell
+      wide
+      title="AI Chat Assistant"
+      actions={
         <button
           type="button"
           onClick={startNewChat}
-          className="rounded-lg border border-white/15 bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50 hover:bg-[var(--color-surface-700)]"
+          className="ui-btn-secondary px-4 py-2 text-sm"
         >
           New Chat
         </button>
-      </div>
-
-      <div className="grid min-h-[70vh] flex-1 gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-3">
+      }
+    >
+      <div className="grid min-h-[70vh] gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="rounded-2xl border border-[var(--color-border)] bg-white p-3 shadow-[0_10px_28px_-24px_rgba(15,23,42,0.28)]">
           <p className="px-2 text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-ink-400)]">
             History
           </p>
@@ -175,7 +166,7 @@ export function ChatAssistantPage() {
                     }}
                     className={`w-full rounded-lg px-3 py-2 text-left text-sm transition ${
                       active
-                        ? "bg-[var(--color-accent-soft)]/40 text-[var(--color-ink-100)]"
+                        ? "bg-[var(--color-accent-soft)] text-[var(--color-ink-100)]"
                         : "text-[var(--color-ink-300)] hover:bg-[var(--color-surface-800)]"
                     }`}
                   >
@@ -187,8 +178,11 @@ export function ChatAssistantPage() {
           </div>
         </aside>
 
-        <section className="flex min-h-[60vh] flex-col rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80">
-          <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-6">
+        <section className="flex min-h-[60vh] flex-col rounded-2xl border border-[var(--color-border)] bg-white shadow-[0_10px_28px_-24px_rgba(15,23,42,0.28)]">
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-6"
+          >
             {loadingMessages ? (
               <p className="text-sm text-[var(--color-ink-400)]">Loading messages…</p>
             ) : messages.length === 0 && !sending ? (
@@ -210,14 +204,20 @@ export function ChatAssistantPage() {
                   <div
                     className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       message.role === "user"
-                        ? "bg-[var(--color-accent-soft)] text-[var(--color-ink-100)]"
-                        : "border border-white/10 bg-[var(--color-surface-800)] text-[var(--color-ink-100)]"
+                        ? "bg-[var(--color-accent)] text-white"
+                        : "border border-[var(--color-border)] bg-[var(--color-surface-900)] text-[var(--color-ink-100)]"
                     }`}
                   >
-                    <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--color-ink-400)]">
+                    <p
+                      className={`mb-1 text-[10px] font-medium uppercase tracking-[0.12em] ${
+                        message.role === "user"
+                          ? "text-indigo-100"
+                          : "text-[var(--color-ink-400)]"
+                      }`}
+                    >
                       {message.role === "user" ? "You" : "Assistant"}
                     </p>
-                    <p className="whitespace-pre-wrap">{message.content}</p>
+                    <p className="whitespace-pre-wrap break-words">{message.content}</p>
                   </div>
                 </div>
               ))
@@ -225,7 +225,7 @@ export function ChatAssistantPage() {
 
             {sending ? (
               <div className="flex justify-start">
-                <div className="rounded-2xl border border-white/10 bg-[var(--color-surface-800)] px-4 py-3 text-sm text-[var(--color-ink-400)]">
+                <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-900)] px-4 py-3 text-sm text-[var(--color-ink-400)]">
                   Assistant is thinking…
                 </div>
               </div>
@@ -235,7 +235,7 @@ export function ChatAssistantPage() {
           </div>
 
           {error ? (
-            <div className="mx-4 mb-3 rounded-xl border border-[var(--color-danger)]/40 bg-[var(--color-danger)]/10 px-4 py-3 text-sm text-[var(--color-ink-100)] sm:mx-6">
+            <div className="mx-4 mb-3 rounded-xl border border-[var(--color-danger)]/30 bg-red-50 px-4 py-3 text-sm text-[var(--color-ink-100)] sm:mx-6">
               <p>{error}</p>
               <button
                 type="button"
@@ -255,7 +255,7 @@ export function ChatAssistantPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="border-t border-white/10 p-4 sm:p-5"
+            className="border-t border-[var(--color-border)] bg-[var(--color-surface-900)]/60 p-4 sm:p-5"
           >
             <div className="flex flex-col gap-3 sm:flex-row">
               <label className="sr-only" htmlFor="chat-message">
@@ -268,7 +268,7 @@ export function ChatAssistantPage() {
                 rows={2}
                 placeholder="Type a message…"
                 disabled={sending}
-                className="min-h-[52px] flex-1 resize-y rounded-xl border border-white/10 bg-[var(--color-surface-900)] px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1 disabled:opacity-60"
+                className="min-h-[52px] flex-1 resize-y rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1 disabled:opacity-60"
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -279,7 +279,7 @@ export function ChatAssistantPage() {
               <button
                 type="submit"
                 disabled={sending || !draft.trim()}
-                className="rounded-xl bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-surface-950)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                className="ui-btn-primary px-5 py-2.5 text-sm"
               >
                 {sending ? "Sending…" : "Send"}
               </button>
@@ -287,6 +287,6 @@ export function ChatAssistantPage() {
           </form>
         </section>
       </div>
-    </main>
+    </FeatureShell>
   );
 }

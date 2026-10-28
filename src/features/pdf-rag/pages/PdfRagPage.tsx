@@ -7,7 +7,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { Link } from "react-router-dom";
+import { FeatureShell } from "../../../components/layout/FeatureShell";
 import { ApiError } from "../../../services/api/client";
 import { ragApi } from "../api/ragApi";
 import type { RagCitation, RagDocument, RagMessage, RagSessionSummary } from "../types";
@@ -80,6 +80,7 @@ export function PdfRagPage() {
   const [sessions, setSessions] = useState<RagSessionSummary[]>([]);
 
   const citationRefs = useRef<Record<number, HTMLElement | null>>({});
+  const turnsContainerRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const latestCitations = useMemo(() => {
@@ -123,7 +124,9 @@ export function PdfRagPage() {
   }, [loadDocuments, loadSessions]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = turnsContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   }, [turns, asking]);
 
   const toggleDocument = (id: string) => {
@@ -217,30 +220,14 @@ export function PdfRagPage() {
   };
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-      <Link
-        to="/"
-        className="w-fit text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
-      >
-        ← Back to dashboard
-      </Link>
-
-      <header className="fade-in mt-6 max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
-          Retrieval-augmented generation
-        </p>
-        <h1 className="font-display mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          PDF Question Answering
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-300)] sm:text-base">
-          Ask questions against indexed documents. Answers are grounded in
-          retrieved passages with validated citations — never invented sources.
-        </p>
-      </header>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)]">
+    <FeatureShell
+      title="PDF Question Answering"
+      description="Ask questions against indexed documents. Answers are grounded in retrieved passages with validated citations — never invented sources."
+      wide={true}
+    >
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)]">
         <aside className="space-y-4">
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-lg font-semibold">Documents</h2>
               <button
@@ -282,7 +269,7 @@ export function PdfRagPage() {
                         className={`w-full rounded-xl border px-3 py-2 text-left transition ${
                           active
                             ? "border-[var(--color-accent)]/50 bg-[var(--color-accent)]/10"
-                            : "border-white/10 bg-[var(--color-surface-800)]/70 hover:border-white/25"
+                            : "border-[var(--color-border)] bg-[var(--color-surface-800)]/70 hover:border-[var(--color-accent)]/40"
                         }`}
                       >
                         <p className="truncate text-sm font-medium">
@@ -299,7 +286,7 @@ export function PdfRagPage() {
             </ul>
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-lg font-semibold">Sessions</h2>
               <button
@@ -324,7 +311,7 @@ export function PdfRagPage() {
                       className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${
                         sessionId === session.id
                           ? "border-[var(--color-accent)]/40 bg-[var(--color-accent)]/10"
-                          : "border-white/10 hover:border-white/25"
+                          : "border-[var(--color-border)] hover:border-[var(--color-accent)]/40"
                       }`}
                     >
                       <span className="line-clamp-2">{session.title}</span>
@@ -336,7 +323,7 @@ export function PdfRagPage() {
           </section>
         </aside>
 
-        <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+        <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-display text-lg font-semibold">Q&amp;A</h2>
             <label className="flex items-center gap-2 text-sm text-[var(--color-ink-300)]">
@@ -344,7 +331,7 @@ export function PdfRagPage() {
               <select
                 value={topK}
                 onChange={(event) => setTopK(Number(event.target.value))}
-                className="rounded-lg border border-white/10 bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
               >
                 {[3, 5, 8, 10].map((value) => (
                   <option key={value} value={value}>
@@ -362,14 +349,17 @@ export function PdfRagPage() {
                 type="button"
                 disabled={asking}
                 onClick={() => void ask(undefined, suggestion)}
-                className="rounded-lg border border-white/10 px-2.5 py-1 text-xs text-[var(--color-ink-300)] hover:border-[var(--color-accent)]/40 disabled:opacity-50"
+                className="rounded-lg border border-[var(--color-border)] px-2.5 py-1 text-xs text-[var(--color-ink-300)] hover:border-[var(--color-accent)]/40 disabled:opacity-50"
               >
                 {suggestion}
               </button>
             ))}
           </div>
 
-          <div className="mt-4 max-h-[28rem] space-y-3 overflow-y-auto rounded-xl border border-white/5 bg-[var(--color-surface-900)]/40 p-3">
+          <div
+            ref={turnsContainerRef}
+            className="mt-4 max-h-[28rem] space-y-3 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-900)]/40 p-3"
+          >
             {turns.length === 0 ? (
               <p className="text-sm text-[var(--color-ink-400)]">
                 Ask a question to retrieve passages and generate a cited answer.
@@ -381,7 +371,7 @@ export function PdfRagPage() {
                   className={`rounded-xl px-3 py-2 text-sm leading-relaxed ${
                     turn.role === "user"
                       ? "ml-8 bg-[var(--color-surface-700)]/80"
-                      : "mr-4 border border-white/10 bg-[var(--color-surface-800)]/80"
+                      : "mr-4 border border-[var(--color-border)] bg-[var(--color-surface-800)]/80"
                   }`}
                 >
                   <p className="mb-1 text-[10px] uppercase tracking-wide text-[var(--color-ink-500)]">
@@ -424,12 +414,12 @@ export function PdfRagPage() {
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
               placeholder="Ask a question about the selected documents…"
-              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[var(--color-surface-800)] px-3 py-2 text-sm outline-none ring-[var(--color-accent)] focus:ring-1"
+              className="min-w-0 flex-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-800)] px-3 py-2 text-sm outline-none ring-[var(--color-accent)] focus:ring-1"
             />
             <button
               type="submit"
               disabled={asking}
-              className="rounded-xl bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-black disabled:opacity-50"
+              className="rounded-xl bg-[var(--color-accent)] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
             >
               Ask
             </button>
@@ -454,7 +444,7 @@ export function PdfRagPage() {
                     className={`rounded-xl border px-3 py-2 ${
                       activeCitationId === citation.id
                         ? "border-[var(--color-accent)]/60 bg-[var(--color-accent)]/10"
-                        : "border-white/10 bg-[var(--color-surface-800)]/70"
+                        : "border-[var(--color-border)] bg-[var(--color-surface-800)]/70"
                     }`}
                   >
                     <p className="text-xs font-semibold text-[var(--color-accent)]">
@@ -474,6 +464,6 @@ export function PdfRagPage() {
           </div>
         </section>
       </div>
-    </main>
+    </FeatureShell>
   );
 }

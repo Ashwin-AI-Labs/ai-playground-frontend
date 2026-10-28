@@ -107,6 +107,12 @@ Route: `/features/research-agent`
 
 Requires `TAVILY_API_KEY` on the backend for live search. Frontend never holds search or LLM keys.
 
-### Placeholders
+### AI Document Summarizer
 
-`summarizer` remains a dashboard card with a placeholder page until implemented.
+Route: `/features/summarizer`
+
+- Upload PDF / TXT / Markdown (drag-and-drop or file picker)
+- Length, style, and strategy controls (auto / direct / map-reduce / refine)
+- Structured summary sections with copy and Markdown download
+- Saved summary history with reopen and delete confirmation
+- Backend uses real LangChain.js (`Document`, text splitter, prompt templates, runnables, `ChatOpenAI`)

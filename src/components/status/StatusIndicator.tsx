@@ -32,7 +32,7 @@ export function StatusIndicator({ status, message, onRetry }: StatusIndicatorPro
 
   return (
     <div
-      className="flex flex-col gap-3 rounded-xl border border-white/10 bg-[var(--color-surface-850)]/80 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-850)]/80 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
       role="status"
       aria-live="polite"
     >
@@ -50,7 +50,7 @@ export function StatusIndicator({ status, message, onRetry }: StatusIndicatorPro
         type="button"
         onClick={onRetry}
         disabled={status === "loading"}
-        className="inline-flex items-center justify-center rounded-lg border border-white/15 bg-[var(--color-surface-800)] px-3.5 py-2 text-sm font-medium text-[var(--color-ink-100)] transition hover:border-[var(--color-accent)]/50 hover:bg-[var(--color-surface-700)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-3.5 py-2 text-sm font-medium text-[var(--color-ink-100)] transition hover:border-[var(--color-accent)]/50 hover:bg-[var(--color-surface-700)] disabled:cursor-not-allowed disabled:opacity-50"
       >
         {status === "loading" ? "Checking…" : "Retry connection"}
       </button>

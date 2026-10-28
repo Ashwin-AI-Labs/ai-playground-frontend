@@ -1,19 +1,10 @@
-import { ApiError, request } from "../../../services/api/client";
+import { request, requestForm } from "../../../services/api/client";
 import type {
   DocumentResponse,
   DocumentsListResponse,
   SearchDocument,
   SearchResponse,
 } from "../types";
-
-const DEFAULT_API_BASE_URL = "http://localhost:3000/api";
-
-function getApiBaseUrl(): string {
-  const configured = import.meta.env.VITE_API_BASE_URL?.trim();
-  return configured && configured.length > 0
-    ? configured.replace(/\/$/, "")
-    : DEFAULT_API_BASE_URL;
-}
 
 export const semanticSearchApi = {
   listDocuments: (params?: { limit?: number; offset?: number }) => {
@@ -45,41 +36,7 @@ export const semanticSearchApi = {
   uploadDocument: async (file: File): Promise<DocumentResponse> => {
     const form = new FormData();
     form.append("file", file);
-
-    const url = `${getApiBaseUrl()}/semantic-search/documents`;
-    let response: Response;
-    try {
-      response = await fetch(url, {
-        method: "POST",
-        body: form,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-    } catch {
-      throw new ApiError(
-        "Unable to reach the backend API. Is the server running?",
-      );
-    }
-
-    let payload: unknown = null;
-    const contentType = response.headers.get("content-type") ?? "";
-    if (contentType.includes("application/json")) {
-      payload = await response.json();
-    }
-
-    if (!response.ok) {
-      const message =
-        typeof payload === "object" &&
-        payload !== null &&
-        "error" in payload &&
-        typeof (payload as { error: unknown }).error === "string"
-          ? (payload as { error: string }).error
-          : `Upload failed with status ${response.status}`;
-      throw new ApiError(message, response.status);
-    }
-
-    return payload as DocumentResponse;
+    return requestForm<DocumentResponse>("/semantic-search/documents", form);
   },
 };
 

@@ -8,10 +8,10 @@ export function NotFoundPage() {
         That route does not exist in the AI Playground.
       </p>
       <Link
-        to="/"
-        className="mt-8 inline-flex w-fit rounded-lg border border-white/15 bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50"
+        to="/home"
+        className="mt-8 inline-flex w-fit rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50"
       >
-        Back to dashboard
+        Back to home
       </Link>
     </main>
   );

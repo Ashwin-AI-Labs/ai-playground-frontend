@@ -80,7 +80,7 @@ export function TaskForm({
   }
 
   const fieldClass =
-    "w-full rounded-lg border border-white/10 bg-[var(--color-surface-900)] px-3 py-2 text-sm outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1";
+    "w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-900)] px-3 py-2 text-sm outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
@@ -205,7 +205,7 @@ export function TaskForm({
             type="button"
             onClick={onCancel}
             disabled={submitting}
-            className="rounded-lg border border-white/15 px-3 py-2 text-sm"
+            className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
           >
             Cancel
           </button>
@@ -213,7 +213,7 @@ export function TaskForm({
         <button
           type="submit"
           disabled={submitting}
-          className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-surface-950)] disabled:opacity-50"
+          className="rounded-lg bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
         >
           {submitting
             ? mode === "create"

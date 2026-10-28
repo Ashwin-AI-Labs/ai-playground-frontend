@@ -7,7 +7,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { Link } from "react-router-dom";
+import { FeatureShell } from "../../../components/layout/FeatureShell";
 import { ApiError } from "../../../services/api/client";
 import { researchApi } from "../api/researchApi";
 import { collectValidSourceIds, renderCitedText } from "../lib/citations";
@@ -170,31 +170,14 @@ export function ResearchAgentPage() {
   const report = result?.report;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-      <Link
-        to="/"
-        className="w-fit text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
-      >
-        ← Back to dashboard
-      </Link>
-
-      <header className="fade-in mt-6 max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
-          Project 5
-        </p>
-        <h1 className="font-display mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          AI Research Assistant
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-300)] sm:text-base">
-          Ask a research question. The backend searches the live web, retrieves
-          public pages when safe, synthesizes a structured report, and validates
-          every citation against real sources.
-        </p>
-      </header>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)]">
+    <FeatureShell
+      title="AI Research Assistant"
+      description="Ask a research question. The backend searches the live web, retrieves public pages when safe, synthesizes a structured report, and validates every citation against real sources."
+      wide={true}
+    >
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.25fr)]">
         <aside className="space-y-4">
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-display text-lg font-semibold">History</h2>
               <button
@@ -219,7 +202,7 @@ export function ResearchAgentPage() {
                       className={`min-w-0 flex-1 rounded-lg border px-3 py-2 text-left text-sm ${
                         result?.sessionId === session.id
                           ? "border-[var(--color-accent)]/40 bg-[var(--color-accent)]/10"
-                          : "border-white/10 hover:border-white/25"
+                          : "border-[var(--color-border)] hover:border-[var(--color-accent)]/40"
                       }`}
                     >
                       <span className="line-clamp-2 font-medium">
@@ -233,7 +216,7 @@ export function ResearchAgentPage() {
                     <button
                       type="button"
                       onClick={() => setPendingDelete(session)}
-                      className="shrink-0 rounded-lg border border-white/10 px-2 text-xs text-[var(--color-ink-400)] hover:border-[var(--color-danger)]/40 hover:text-[var(--color-danger)]"
+                      className="shrink-0 rounded-lg border border-[var(--color-border)] px-2 text-xs text-[var(--color-ink-400)] hover:border-[var(--color-danger)]/40 hover:text-[var(--color-danger)]"
                       aria-label={`Delete session ${session.title}`}
                     >
                       Delete
@@ -246,7 +229,7 @@ export function ResearchAgentPage() {
         </aside>
 
         <div className="space-y-4">
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
             <h2 className="font-display text-lg font-semibold">Research question</h2>
             <p className="mt-1 text-sm text-[var(--color-ink-400)]">
               Example prompts seed the form. Live search requires{" "}
@@ -261,7 +244,7 @@ export function ResearchAgentPage() {
                   type="button"
                   disabled={running}
                   onClick={() => void runResearch(undefined, suggestion)}
-                  className="rounded-lg border border-white/10 px-2.5 py-1 text-left text-xs text-[var(--color-ink-300)] hover:border-[var(--color-accent)]/40 disabled:opacity-50"
+                  className="rounded-lg border border-[var(--color-border)] px-2.5 py-1 text-left text-xs text-[var(--color-ink-300)] hover:border-[var(--color-accent)]/40 disabled:opacity-50"
                 >
                   {suggestion}
                 </button>
@@ -275,7 +258,7 @@ export function ResearchAgentPage() {
                 rows={4}
                 placeholder="What should we research?"
                 disabled={running}
-                className="w-full rounded-xl border border-white/10 bg-[var(--color-surface-800)] px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] focus:ring-1 disabled:opacity-60"
+                className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-800)] px-3 py-2 text-sm text-[var(--color-ink-100)] outline-none ring-[var(--color-accent)] focus:ring-1 disabled:opacity-60"
               />
 
               <div className="flex flex-wrap gap-3">
@@ -285,7 +268,7 @@ export function ResearchAgentPage() {
                     value={maxResults}
                     onChange={(event) => setMaxResults(Number(event.target.value))}
                     disabled={running}
-                    className="rounded-lg border border-white/10 bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
+                    className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
                   >
                     {[3, 4, 5, 6, 8, 10].map((value) => (
                       <option key={value} value={value}>
@@ -307,7 +290,7 @@ export function ResearchAgentPage() {
                     }}
                     disabled={running}
                     placeholder="any"
-                    className="w-20 rounded-lg border border-white/10 bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
+                    className="w-20 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-2 py-1.5 text-sm"
                   />
                 </label>
               </div>
@@ -320,14 +303,14 @@ export function ResearchAgentPage() {
                   onChange={(event) => setIncludeDomains(event.target.value)}
                   disabled={running}
                   placeholder="react.dev, angular.dev"
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--color-surface-800)] px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-800)] px-3 py-2 text-sm"
                 />
               </label>
 
               <button
                 type="submit"
                 disabled={running || question.trim().length < 3}
-                className="rounded-xl bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-[var(--color-surface-950)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-[var(--color-accent)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {running ? "Researching…" : "Run Research"}
               </button>
@@ -354,7 +337,7 @@ export function ResearchAgentPage() {
           </section>
 
           {!result && !running && !error ? (
-            <section className="rounded-2xl border border-dashed border-white/15 bg-[var(--color-surface-850)]/40 p-6 text-sm text-[var(--color-ink-400)]">
+            <section className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[var(--color-surface-900)] p-6 text-sm text-[var(--color-ink-400)]">
               Run a research question to generate a cited report. Results and
               sources are saved so you can reopen them from History.
             </section>
@@ -362,7 +345,7 @@ export function ResearchAgentPage() {
 
           {result ? (
             <>
-              <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+              <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h2 className="font-display text-lg font-semibold">Report</h2>
@@ -451,7 +434,7 @@ export function ResearchAgentPage() {
                 )}
               </section>
 
-              <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-5">
+              <section className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
                 <h2 className="font-display text-lg font-semibold">Sources</h2>
                 <p className="mt-1 text-sm text-[var(--color-ink-400)]">
                   Citation markers open the matching source. Links open
@@ -472,7 +455,7 @@ export function ResearchAgentPage() {
                         className={`rounded-xl border px-4 py-3 ${
                           activeSourceId === source.id
                             ? "border-[var(--color-accent)]/50 bg-[var(--color-accent)]/10"
-                            : "border-white/10 bg-[var(--color-surface-800)]/60"
+                            : "border-[var(--color-border)] bg-[var(--color-surface-800)]/60"
                         }`}
                       >
                         <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -513,7 +496,7 @@ export function ResearchAgentPage() {
 
       {pendingDelete ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--color-surface-850)] p-5 shadow-xl">
+          <div className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-850)] p-5 shadow-xl">
             <h3 className="font-display text-lg font-semibold">Delete research?</h3>
             <p className="mt-2 text-sm text-[var(--color-ink-300)]">
               This permanently removes “{pendingDelete.title}” and its sources.
@@ -523,7 +506,7 @@ export function ResearchAgentPage() {
                 type="button"
                 disabled={deleting}
                 onClick={() => setPendingDelete(null)}
-                className="rounded-lg border border-white/10 px-3 py-2 text-sm"
+                className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm"
               >
                 Cancel
               </button>
@@ -539,7 +522,7 @@ export function ResearchAgentPage() {
           </div>
         </div>
       ) : null}
-    </main>
+    </FeatureShell>
   );
 }
 

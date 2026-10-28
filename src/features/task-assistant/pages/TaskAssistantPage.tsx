@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { FeatureShell } from "../../../components/layout/FeatureShell";
 import { ApiError } from "../../../services/api/client";
 import { tasksApi } from "../api/tasksApi";
 import { TaskForm, type TaskFormValues } from "../components/TaskForm";
@@ -34,7 +34,7 @@ function priorityClass(priority: Task["priority"]): string {
   if (priority === "medium") {
     return "border-[var(--color-warn)]/40 text-[var(--color-warn)]";
   }
-  return "border-white/20 text-[var(--color-ink-300)]";
+  return "border-[var(--color-border)] text-[var(--color-ink-300)]";
 }
 
 function statusClass(status: Task["status"]): string {
@@ -42,9 +42,9 @@ function statusClass(status: Task["status"]): string {
     return "border-[var(--color-accent)]/40 text-[var(--color-accent)]";
   }
   if (status === "in_progress") {
-    return "border-sky-400/40 text-sky-300";
+    return "border-sky-500/40 text-sky-700";
   }
-  return "border-white/20 text-[var(--color-ink-300)]";
+  return "border-[var(--color-border)] text-[var(--color-ink-300)]";
 }
 
 function toIsoDueDate(localValue: string): string | null {
@@ -75,6 +75,7 @@ export function TaskAssistantPage() {
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(true);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const loadTasks = useCallback(async () => {
@@ -98,7 +99,9 @@ export function TaskAssistantPage() {
   }, [loadTasks]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   }, [messages, sending]);
 
   function pushSystemNotice(content: string) {
@@ -299,31 +302,19 @@ export function TaskAssistantPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <Link
-            to="/"
-            className="text-sm text-[var(--color-ink-400)] transition hover:text-[var(--color-accent)]"
-          >
-            ← Back to dashboard
-          </Link>
-          <h1 className="font-display mt-2 text-3xl font-bold tracking-tight">
-            AI Task Assistant
-          </h1>
-          <p className="mt-1 max-w-2xl text-sm text-[var(--color-ink-400)]">
-            Manage tasks manually with full CRUD, or ask the assistant in chat.
-            Both paths write to the same PostgreSQL tasks table.
-          </p>
-        </div>
+    <FeatureShell
+      title="AI Task Assistant"
+      wide={true}
+      actions={
         <button
           type="button"
           onClick={startNewConversation}
-          className="rounded-lg border border-white/15 bg-[var(--color-surface-800)] px-4 py-2 text-sm font-medium transition hover:border-[var(--color-accent)]/50"
+          className="ui-btn-secondary px-4 py-2 text-sm"
         >
           New chat
         </button>
-      </div>
+      }
+    >
 
       {(error || notice) && (
         <div
@@ -361,13 +352,13 @@ export function TaskAssistantPage() {
         </div>
       )}
 
-      <div className="grid flex-1 gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
-        <section className="flex min-h-[70vh] flex-col rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80">
-          <div className="border-b border-white/10 px-4 py-3">
+      <div className="grid gap-4 lg:grid-cols-2 lg:h-[min(40rem,calc(100vh-11rem))] lg:min-h-[30rem]">
+        <section className="flex h-[min(34rem,70vh)] flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white lg:h-full">
+          <div className="shrink-0 border-b border-[var(--color-border)] px-4 py-3">
             <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
-              Chat CRUD
+              Chat
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-2 flex flex-wrap gap-2">
               {SUGGESTIONS.map((suggestion) => (
                 <button
                   key={suggestion}
@@ -376,7 +367,7 @@ export function TaskAssistantPage() {
                   onClick={() => {
                     void sendMessage(suggestion);
                   }}
-                  className="rounded-lg border border-white/10 bg-[var(--color-surface-900)] px-3 py-1.5 text-left text-xs text-[var(--color-ink-300)] transition hover:border-[var(--color-accent)]/40 hover:text-[var(--color-ink-100)] disabled:opacity-50"
+                  className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-900)] px-2.5 py-1 text-left text-[11px] text-[var(--color-ink-300)] transition hover:border-[var(--color-accent)]/40 hover:text-[var(--color-ink-100)] disabled:opacity-50"
                 >
                   {suggestion}
                 </button>
@@ -384,15 +375,18 @@ export function TaskAssistantPage() {
             </div>
           </div>
 
-          <div className="flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-6">
+          <div
+            ref={messagesContainerRef}
+            className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-5"
+          >
             {messages.length === 0 && !sending ? (
-              <div className="flex min-h-[220px] flex-col items-center justify-center text-center">
-                <p className="font-display text-xl font-semibold">
-                  Chat or use the manual panel
+              <div className="flex h-full min-h-[10rem] flex-col items-center justify-center text-center">
+                <p className="font-display text-lg font-semibold">
+                  Ask in chat or use the form
                 </p>
-                <p className="mt-2 max-w-md text-sm text-[var(--color-ink-400)]">
+                <p className="mt-1.5 max-w-sm text-sm text-[var(--color-ink-400)]">
                   Create, update, and delete tasks with natural language, or use
-                  the form and task list on the right for precise control.
+                  the panel on the right.
                 </p>
               </div>
             ) : (
@@ -413,7 +407,7 @@ export function TaskAssistantPage() {
                         ? "bg-[var(--color-accent-soft)] text-[var(--color-ink-100)]"
                         : message.role === "system"
                           ? "border border-[var(--color-accent)]/20 bg-[var(--color-accent)]/10 text-[var(--color-ink-300)]"
-                          : "border border-white/10 bg-[var(--color-surface-800)]"
+                          : "border border-[var(--color-border)] bg-[var(--color-surface-800)]"
                     }`}
                   >
                     <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--color-ink-400)]">
@@ -425,7 +419,7 @@ export function TaskAssistantPage() {
                     </p>
                     <p className="whitespace-pre-wrap">{message.content}</p>
                     {message.actions && message.actions.length > 0 ? (
-                      <ul className="mt-3 space-y-1 border-t border-white/10 pt-2 text-xs text-[var(--color-ink-400)]">
+                      <ul className="mt-3 space-y-1 border-t border-[var(--color-border)] pt-2 text-xs text-[var(--color-ink-400)]">
                         {message.actions.map((action, index) => (
                           <li key={`${message.id}-action-${index}`}>
                             {action.ok ? "✓" : "✗"} {action.summary}
@@ -440,7 +434,7 @@ export function TaskAssistantPage() {
 
             {sending ? (
               <div className="flex justify-start">
-                <div className="rounded-2xl border border-white/10 bg-[var(--color-surface-800)] px-4 py-3 text-sm text-[var(--color-ink-400)]">
+                <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-800)] px-4 py-3 text-sm text-[var(--color-ink-400)]">
                   Running tools…
                 </div>
               </div>
@@ -450,9 +444,9 @@ export function TaskAssistantPage() {
 
           <form
             onSubmit={handleChatSubmit}
-            className="border-t border-white/10 p-4 sm:p-5"
+            className="shrink-0 border-t border-[var(--color-border)] bg-[var(--color-surface-900)]/50 p-3 sm:p-4"
           >
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
               <label className="sr-only" htmlFor="task-message">
                 Message
               </label>
@@ -463,7 +457,7 @@ export function TaskAssistantPage() {
                 rows={2}
                 placeholder="Ask to create, list, update, or delete a task…"
                 disabled={sending}
-                className="min-h-[52px] flex-1 resize-y rounded-xl border border-white/10 bg-[var(--color-surface-900)] px-3 py-2 text-sm outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1 disabled:opacity-60"
+                className="min-h-[44px] max-h-28 flex-1 resize-y rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-sm outline-none ring-[var(--color-accent)] placeholder:text-[var(--color-ink-400)] focus:ring-1 disabled:opacity-60"
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -474,7 +468,7 @@ export function TaskAssistantPage() {
               <button
                 type="submit"
                 disabled={sending || !draft.trim()}
-                className="rounded-xl bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-[var(--color-surface-950)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+                className="ui-btn-primary px-5 py-2.5 text-sm"
               >
                 {sending ? "Sending…" : "Send"}
               </button>
@@ -482,8 +476,8 @@ export function TaskAssistantPage() {
           </form>
         </section>
 
-        <aside className="space-y-4">
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-4">
+        <aside className="flex max-h-[min(40rem,calc(100vh-11rem))] min-h-0 flex-col gap-4 overflow-y-auto lg:max-h-none">
+          <section className="shrink-0 rounded-2xl border border-[var(--color-border)] bg-white p-4">
             <div className="mb-3 flex items-center justify-between gap-2">
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--color-accent)]">
@@ -525,7 +519,7 @@ export function TaskAssistantPage() {
             )}
           </section>
 
-          <section className="rounded-2xl border border-white/10 bg-[var(--color-surface-850)]/80 p-4">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-display text-lg font-semibold">Task list</h2>
               <button
@@ -547,7 +541,7 @@ export function TaskAssistantPage() {
                   onChange={(event) =>
                     setStatusFilter(event.target.value as StatusFilter)
                   }
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--color-surface-900)] px-2 py-1.5 text-sm"
+                  className="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-900)] px-2 py-1.5 text-sm"
                 >
                   <option value="all">All</option>
                   <option value="pending">Pending</option>
@@ -564,7 +558,7 @@ export function TaskAssistantPage() {
                       event.target.value as TaskPriority | "all",
                     )
                   }
-                  className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--color-surface-900)] px-2 py-1.5 text-sm"
+                  className="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-900)] px-2 py-1.5 text-sm"
                 >
                   <option value="all">All</option>
                   <option value="low">Low</option>
@@ -585,7 +579,7 @@ export function TaskAssistantPage() {
                 {tasks.map((task) => (
                   <li
                     key={task.id}
-                    className="rounded-xl border border-white/10 bg-[var(--color-surface-900)]/70 p-3"
+                    className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-900)]/70 p-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -623,7 +617,7 @@ export function TaskAssistantPage() {
                       <button
                         type="button"
                         onClick={() => setEditingTask(task)}
-                        className="rounded-md border border-white/15 px-2.5 py-1 text-xs transition hover:border-[var(--color-accent)]/50"
+                        className="rounded-md border border-[var(--color-border)] px-2.5 py-1 text-xs transition hover:border-[var(--color-accent)]/50"
                       >
                         Edit
                       </button>
@@ -673,7 +667,7 @@ export function TaskAssistantPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-task-title"
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--color-surface-900)] p-6 shadow-xl"
+            className="w-full max-w-md rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-900)] p-6 shadow-xl"
           >
             <h2
               id="delete-task-title"
@@ -691,7 +685,7 @@ export function TaskAssistantPage() {
                 type="button"
                 disabled={confirmingDelete}
                 onClick={() => setPendingDelete(null)}
-                className="rounded-lg border border-white/15 px-4 py-2 text-sm"
+                className="rounded-lg border border-[var(--color-border)] px-4 py-2 text-sm"
               >
                 Cancel
               </button>
@@ -709,6 +703,6 @@ export function TaskAssistantPage() {
           </div>
         </div>
       ) : null}
-    </main>
+    </FeatureShell>
   );
 }

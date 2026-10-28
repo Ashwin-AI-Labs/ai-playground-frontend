@@ -4,18 +4,24 @@
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
 
-  --color-surface-950: #070b12;
-  --color-surface-900: #0d1420;
-  --color-surface-850: #121b2a;
-  --color-surface-800: #182335;
-  --color-surface-700: #243247;
-  --color-ink-100: #e8eef7;
-  --color-ink-300: #a8b6c9;
-  --color-ink-400: #7f90a8;
-  --color-accent: #3db8a0;
-  --color-accent-soft: #1f6f62;
-  --color-warn: #d4a017;
-  --color-danger: #e05a5a;
+  /* Light SaaS palette — aligned with landing page */
+  --color-surface-950: #ffffff;
+  --color-surface-900: #f8fafc;
+  --color-surface-850: #ffffff;
+  --color-surface-800: #f1f5f9;
+  --color-surface-700: #e2e8f0;
+  --color-ink-100: #111827;
+  --color-ink-200: #1e293b;
+  --color-ink-300: #475569;
+  --color-ink-400: #64748b;
+  --color-ink-500: #94a3b8;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-accent-soft: #eef2ff;
+  --color-warn: #d97706;
+  --color-danger: #dc2626;
+  --color-border: #e2e8f0;
+  --color-success: #059669;
 }
 
 @layer base {
@@ -24,7 +30,7 @@
   }
 
   html {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
@@ -32,11 +38,7 @@
     min-height: 100vh;
     font-family: var(--font-sans);
     color: var(--color-ink-100);
-    background:
-      radial-gradient(ellipse 80% 50% at 10% -10%, rgba(61, 184, 160, 0.14), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 90% 0%, rgba(70, 110, 180, 0.12), transparent 50%),
-      linear-gradient(180deg, var(--color-surface-950) 0%, var(--color-surface-900) 45%, #0a1018 100%);
-    background-attachment: fixed;
+    background: #ffffff;
   }
 
   #root {
