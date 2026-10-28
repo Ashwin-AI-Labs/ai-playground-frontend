@@ -30,7 +30,7 @@ src/
     chat-assistant/    # page, api, types
     task-assistant/    # page, components, api, types
     semantic-search/   # page, api, types (full Project 3 UI)
-    pdf-rag/           # metadata placeholder
+    pdf-rag/           # RAG Q&A page, api, types
     document-summarizer/
     research-agent/
   services/api/        # shared HTTP client (no feature business logic)
@@ -85,6 +85,16 @@ Full Project 3 UI:
 
 Similarity percentages are cosine similarities from the embedding model — not calibrated probabilities of correctness.
 
+### PDF Question Answering (RAG)
+
+Route: `/features/pdf-qa`
+
+- Select completed indexed documents (from Semantic Search ingestion)
+- Ask questions with follow-up sessions
+- Inline numbered citations that jump to source cards
+- Page labels when PDF page metadata exists; otherwise “Page unavailable”
+- Insufficient-evidence state when retrieval/support is too weak
+
 ### Placeholders
 
-`pdf-qa`, `summarizer`, and `research-agent` remain dashboard cards with placeholder pages until implemented.
+`summarizer` and `research-agent` remain dashboard cards with placeholder pages until implemented.
